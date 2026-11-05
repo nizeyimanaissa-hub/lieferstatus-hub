@@ -1,0 +1,4 @@
+ID,salesOrder,customer,status,plannedDate,delayReason
+d3b0a1e2-0001-4000-8000-000000000001,1,17100001,Offen,2026-11-20,
+d3b0a1e2-0002-4000-8000-000000000002,2,17100002,InLieferung,2026-11-12,
+d3b0a1e2-0003-4000-8000-000000000003,3,17100001,Verzoegert,2026-11-08,Material kam zu spät vom Lieferanten
