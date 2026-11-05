@@ -1,0 +1,4 @@
+SalesOrder,SoldToParty,SalesOrganization,CreationDate,RequestedDeliveryDate,TotalNetAmount,TransactionCurrency,OverallSDProcessStatus,OverallTotalDeliveryStatus
+1,17100001,1710,2026-11-01,2026-11-20,1250.00,EUR,A,A
+2,17100002,1710,2026-11-02,2026-11-12,980.50,EUR,B,B
+3,17100001,1710,2026-10-28,2026-11-08,4300.00,EUR,B,A

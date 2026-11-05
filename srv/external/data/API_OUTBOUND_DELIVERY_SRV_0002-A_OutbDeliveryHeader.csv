@@ -1,0 +1,4 @@
+DeliveryDocument,ShippingPoint,PlannedGoodsIssueDate,ActualGoodsMovementDate,OverallGoodsMovementStatus,Shippinglocationtimezone,Receivinglocationtimezone
+80000001,1710,2026-11-18T00:00:00Z,,A,CET,CET
+80000002,1710,2026-11-10T00:00:00Z,,B,CET,CET
+80000003,1710,2026-11-05T00:00:00Z,2026-11-07T00:00:00Z,C,CET,CET

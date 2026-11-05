@@ -11,6 +11,21 @@
     "#cds-models/*": "./@cds-models/*/index.js"
   },
   "dependencies": {
-    "@sap/cds": "^10.2.2"
+    "@sap/cds": "^10.2.2",
+    "@sap-cloud-sdk/connectivity": "^4",
+    "@sap-cloud-sdk/http-client": "^4",
+    "@sap-cloud-sdk/resilience": "^4"
+  },
+  "cds": {
+    "requires": {
+      "API_SALES_ORDER_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_SALES_ORDER_SRV"
+      },
+      "API_OUTBOUND_DELIVERY_SRV_0002": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_OUTBOUND_DELIVERY_SRV_0002"
+      }
+    }
   }
 }
