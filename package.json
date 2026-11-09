@@ -1,13 +1,20 @@
 {
   "devDependencies": {
+    "@cap-js/cds-test": "^1.0.2",
     "@cap-js/cds-typer": ">=0.1",
     "@cap-js/cds-types": "^0.18.0",
     "@cap-js/sqlite": "^3.1.2",
     "@sap/cds-dk": "^10",
+    "@swc/core": "^1.16.22",
+    "@swc/jest": "^0.2.39",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
     "cds-plugin-ui5": "^0.17.0",
+    "jest": "^30.5.2",
     "tsx": "^4",
-    "typescript": "^7.0.0"
+    "typescript": "^7.0.0",
+    "@sap/eslint-plugin-cds": "^4",
+    "eslint": "^10"
   },
   "imports": {
     "#cds-models/*": "./@cds-models/*/index.js"
@@ -83,6 +90,7 @@
   ],
   "scripts": {
     "start": "cds-serve",
+    "test": "jest",
     "watch-trackingapp": "cds watch --open trackingapp/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "sapux": [

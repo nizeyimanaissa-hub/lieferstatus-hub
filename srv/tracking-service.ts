@@ -46,21 +46,27 @@ export default class TrackingService extends cds.ApplicationService {
     // Action: recalculate the status from S/4HANA
     this.on('refreshStatus', OrderTracking, async req => {
       const tracking = await SELECT.one.from(req.subject)
-      const order = await salesOrderApi.run(
-        SELECT.one.from(SalesOrders).where({ SalesOrder: tracking.salesOrder })
-      )
-      if (!order) return req.reject({ status: 404, message: 'ORDER_NOT_FOUND', args: [tracking.salesOrder] })
-
-      const items = await deliveryApi.run(
-        SELECT.from(DeliveryItems).columns('DeliveryDocument').where({ ReferenceSDDocument: tracking.salesOrder })
-      )
+      let order: any
       let goodsMovementStatus: string | undefined
-      if (items.length) {
-        const delivery = await deliveryApi.run(
-          SELECT.one.from(Deliveries).where({ DeliveryDocument: items[0].DeliveryDocument })
+      try {
+        order = await salesOrderApi.run(
+          SELECT.one.from(SalesOrders).where({ SalesOrder: tracking.salesOrder })
         )
-        goodsMovementStatus = delivery?.OverallGoodsMovementStatus
+        const items: any[] = await deliveryApi.run(
+          SELECT.from(DeliveryItems).columns('DeliveryDocument').where({ ReferenceSDDocument: tracking.salesOrder })
+        )
+        if (items.length) {
+          const delivery = await deliveryApi.run(
+            SELECT.one.from(Deliveries).where({ DeliveryDocument: items[0].DeliveryDocument })
+          )
+          goodsMovementStatus = delivery?.OverallGoodsMovementStatus
+        }
+      } catch (err: any) {
+        LOG.error('S/4HANA call failed', err.message)
+        return req.reject({ status: 502, message: 'S4_UNAVAILABLE' })
       }
+      // Outside the try: req.reject throws and must not be caught above
+      if (!order) return req.reject({ status: 404, message: 'ORDER_NOT_FOUND', args: [tracking.salesOrder] })
 
       const newStatus = calculateStatus({
         orderDeliveryStatus: order.OverallTotalDeliveryStatus,
