@@ -1,0 +1,42 @@
+@base = http://localhost:4004/tracking
+@id = d3b0a1e2-0003-4000-8000-000000000003
+
+### All trackings with their log
+GET {{base}}/OrderTracking?$expand=statusLog
+
+### Create a tracking (use a real order number that isn't tracked yet)
+POST {{base}}/OrderTracking
+Content-Type: application/json
+
+{ "salesOrder": "4", "customer": "17100001", "plannedDate": "2026-12-15" }
+
+### Create with an unknown order: should fail with ORDER_NOT_FOUND
+POST {{base}}/OrderTracking
+Content-Type: application/json
+
+{ "salesOrder": "999999999", "plannedDate": "2026-12-15" }
+
+### Recalculate the status from S/4HANA
+POST {{base}}/OrderTracking({{id}})/TrackingService.refreshStatus
+Content-Type: application/json
+
+{}
+
+### Report a delay
+POST {{base}}/OrderTracking({{id}})/TrackingService.markDelayed
+Content-Type: application/json
+
+{ "reason": "Spedition streikt" }
+
+### German messages: same call without a reason
+POST {{base}}/OrderTracking({{id}})/TrackingService.markDelayed
+Content-Type: application/json
+Accept-Language: de
+
+{ "reason": "" }
+
+### Notify the customer
+POST {{base}}/OrderTracking({{id}})/TrackingService.notifyCustomer
+Content-Type: application/json
+
+{}
