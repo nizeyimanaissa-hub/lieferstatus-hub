@@ -26,7 +26,8 @@
       "API_OUTBOUND_DELIVERY_SRV_0002": {
         "kind": "odata-v2",
         "model": "srv/external/API_OUTBOUND_DELIVERY_SRV_0002"
-      }
+      },
+      "LIEFERSTATUS_IFLOW": { "kind": "rest" }
     }
   },
   "workspaces": [

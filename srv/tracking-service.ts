@@ -85,14 +85,30 @@ export default class TrackingService extends cds.ApplicationService {
       return SELECT.one.from(req.subject)
     })
 
-    // Action: notify the customer (local version, Sprint 5 adds the iFlow)
+        // Action: notify the customer through the iFlow
     this.on('notifyCustomer', OrderTracking, async req => {
       const tracking = await SELECT.one.from(req.subject)
-      await INSERT.into(db.Notification).entries({
-        tracking_ID: tracking.ID,
-        message: `Ihre Bestellung ${tracking.salesOrder} hat den Status ${tracking.status}.`,
-        sentOk: false
-      })
+      const payload = {
+        salesOrder: tracking.salesOrder,
+        customer: tracking.customer,
+        status: tracking.status,
+        delayReason: tracking.delayReason
+      }
+
+      try {
+        const iflow = await cds.connect.to('LIEFERSTATUS_IFLOW')
+        const response = await iflow.send({ method: 'POST', path: '/lieferstatus/notify', data: payload })
+        await INSERT.into(db.Notification).entries({
+          tracking_ID: tracking.ID, message: response.message, sentOk: true
+        })
+        req.info({ message: 'NOTIFICATION_SENT', args: [tracking.salesOrder] })
+      } catch (err: any) {
+        LOG.error('iFlow call failed', err.message)
+        await INSERT.into(db.Notification).entries({
+          tracking_ID: tracking.ID, message: `Fehler: ${err.message}`, sentOk: false
+        })
+        req.warn({ message: 'NOTIFICATION_FAILED' })
+      }
       return SELECT.one.from(req.subject)
     })
 
