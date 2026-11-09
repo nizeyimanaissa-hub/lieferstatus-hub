@@ -36,3 +36,4 @@ service TrackingService @(path: '/tracking') {
         ReferenceSDDocument
   };
 }
+annotate TrackingService.OrderTracking with @odata.draft.enabled;

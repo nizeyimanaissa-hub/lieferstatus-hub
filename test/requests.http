@@ -17,7 +17,7 @@ Content-Type: application/json
 { "salesOrder": "999999999", "plannedDate": "2026-12-15" }
 
 ### Recalculate the status from S/4HANA
-POST {{base}}/OrderTracking({{id}})/TrackingService.refreshStatus
+POST {{base}}/OrderTracking(ID={{id}},IsActiveEntity=true)/TrackingService.refreshStatus
 Content-Type: application/json
 
 {}

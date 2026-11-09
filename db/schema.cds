@@ -10,6 +10,17 @@ entity OrderTracking : cuid, managed {
   status        : Status default 'Offen';
   plannedDate   : Date;
   delayReason   : String(255);
+  statusCriticality : Integer = case status
+                                  when 'Geliefert'   then 3   // green
+                                  when 'InLieferung' then 2   // orange
+                                  when 'Verzoegert'  then 1   // red
+                                  else 0                      // grey
+                                end;
+  statusText        : String(20) = case status
+                                  when 'InLieferung' then 'In Lieferung'
+                                  when 'Verzoegert'  then 'Verzögert'
+                                  else status
+                                end;
   statusLog     : Composition of many StatusLog on statusLog.tracking = $self;
   notifications : Composition of many Notification on notifications.tracking = $self;
 }
