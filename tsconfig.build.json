@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "noEmitOnError": false,
+    "sourceMap": false,
+    "allowJs": false,
+    "rootDir": ".",
+    "outDir": "gen/srv"
+  },
+  "include": ["srv/**/*.ts"],
+  "exclude": ["app", "node_modules", "gen", "test", "srv/external"]
+}

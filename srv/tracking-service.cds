@@ -37,3 +37,12 @@ service TrackingService @(path: '/tracking') {
   };
 }
 annotate TrackingService.OrderTracking with @odata.draft.enabled;
+
+// Only logged-in users get in at all
+annotate TrackingService with @(requires: 'authenticated-user');
+
+// Viewer can only read, Dispatcher can do everything incl. actions
+annotate TrackingService.OrderTracking with @(restrict: [
+  { grant: 'READ', to: 'Viewer' },
+  { grant: '*',    to: 'Dispatcher' }
+]);

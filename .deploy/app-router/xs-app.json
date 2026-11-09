@@ -1,0 +1,16 @@
+{
+  "welcomeFile": "/trackingapp/webapp/index.html",
+  "routes": [
+    {
+      "source": "^/trackingapp/webapp/(.*)$",
+      "target": "$1",
+      "localDir": "trackingapp"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "destination": "srv-api",
+      "csrfProtection": true
+    }
+  ]
+}

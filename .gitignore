@@ -2,3 +2,10 @@
 .cdsrc-private.json
 .env
 node_modules/
+# build and deploy output
+gen/
+mta_archives/
+mta-op-*/
+Makefile_*.mta
+.deploy/app-router/trackingapp/
+.deploy/app-router/node_modules/
