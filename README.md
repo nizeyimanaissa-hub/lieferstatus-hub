@@ -1,47 +1,46 @@
 # LieferStatus-Hub
 
+🇩🇪 Deutsch · [🇬🇧 English](README.en.md)
+
 [![tests](https://github.com/nizeyimanaissa-hub/lieferstatus-hub/actions/workflows/test.yml/badge.svg)](https://github.com/nizeyimanaissa-hub/lieferstatus-hub/actions/workflows/test.yml)
 
-A clean-core side-by-side extension on **SAP BTP**: order and delivery status from S/4HANA in one Fiori app, with customer notifications through **SAP Integration Suite**. Built as a portfolio project with **SAP CAP (Node.js, TypeScript), Fiori Elements, HANA Cloud and XSUAA**. S/4HANA itself stays untouched.
-
-> **Kurz auf Deutsch:** Erweiterung auf SAP BTP, die Kundenaufträge und Lieferungen aus S/4HANA zusammenführt, Verzögerungen mit Grund erfasst und Kunden über einen iFlow benachrichtigt. Standard-S/4HANA bleibt unverändert.
+Eine Clean-Core-Side-by-Side-Erweiterung auf **SAP BTP**: Auftrags- und Lieferstatus aus S/4HANA in einer Fiori-App, mit Kundenbenachrichtigung über **SAP Integration Suite**. Entstanden als Portfolio-Projekt mit **SAP CAP (Node.js, TypeScript), Fiori Elements, HANA Cloud und XSUAA**. S/4HANA selbst bleibt unverändert.
 
 ## Demo
 
-[2-minute video](#) · screenshots below
-
-| List Report | Object Page |
-|---|---|
-| ![List Report](docs/img/list.png) | ![Object Page](docs/img/object-page.png) |
-
-| Notification in Integration Suite monitoring |
+| Dashboard mit KPI-Kacheln, „Handlungsbedarf“-Popover und Auftragstabelle |
 |---|
-| ![Integration Suite monitoring](docs/img/monitoring.png) |
+| ![Dashboard](docs/img/Dashboard.png) |
 
-## What it does
+| Objektseite mit Statusverlauf und Benachrichtigungen |
+|---|
+| ![Objektseite](docs/img/Object.png) |
 
-| Feature | For | Highlights |
+## Was die App kann
+
+| Funktion | Für | Besonderheiten |
 |---|---|---|
-| **Order tracking list** | Dispatchers, viewers | One list of tracked sales orders with status as a coloured tag: *Offen*, *In Lieferung*, *Geliefert*, *Verzögert* |
-| **Refresh status** | Dispatchers | Reads the sales order and its outbound delivery live from the S/4HANA APIs and recalculates the status |
-| **Report a delay** | Dispatchers | Action with a mandatory reason; the reason and the status change go into a read-only status history |
-| **Notify customer** | Dispatchers | Calls an iFlow in Integration Suite, which maps the data to a German customer message; every attempt is logged, including failures |
-| **Draft editing** | Dispatchers | Create and edit trackings as drafts; validation runs when saving |
+| **Dashboard** | Disponenten, Leser | KPI-Kacheln (gesamt, Anteil geliefert, in Lieferung, verzögert, überfällig, fällig in 7 Tagen) über der Auftragstabelle. Ein Klick auf eine Kachel filtert die Tabelle, ein zweiter Klick hebt den Filter auf. Die Kachel „Handlungsbedarf“ öffnet ein Popover mit verzögerten und überfälligen Aufträgen |
+| **Auftragsliste** | Disponenten, Leser | Eine Liste aller verfolgten Kundenaufträge mit farbigem Status: *Offen*, *In Lieferung*, *Geliefert*, *Verzögert* |
+| **Status aktualisieren** | Disponenten | Liest Kundenauftrag und Auslieferung live aus den S/4HANA-APIs und berechnet den Status neu |
+| **Verzögerung melden** | Disponenten | Aktion mit Pflichtgrund; Grund und Statuswechsel landen in einem schreibgeschützten Statusverlauf |
+| **Kunden benachrichtigen** | Disponenten | Ruft einen iFlow in der Integration Suite auf, der die Daten in eine deutsche Kundennachricht umwandelt; jeder Versuch wird protokolliert, auch Fehlschläge |
+| **Entwurfsbearbeitung** | Disponenten | Verfolgungen als Entwurf anlegen und bearbeiten; die Prüfung läuft beim Sichern. Der Button „Neu anlegen“ ist für Leser ausgeblendet |
 
-## Architecture
+## Architektur
 
 ```mermaid
 flowchart LR
   subgraph BTP["SAP BTP, Cloud Foundry"]
-    AR["App router<br/>login + serves the Fiori app"]
-    FE["Fiori Elements app<br/>List Report + Object Page"]
-    SRV["CAP service (TypeScript)<br/>status logic · actions · validation"]
-    DB[("SAP HANA Cloud<br/>tracking · status log · notifications")]
-    XS["XSUAA<br/>roles Viewer · Dispatcher"]
-    DEST["Destination service<br/>S/4 API key · iFlow credentials"]
-    IFLOW["Integration Suite iFlow<br/>Groovy mapping"]
+    AR["App router<br/>Login + liefert die Fiori-App aus"]
+    FE["Fiori-Elements-App<br/>Dashboard-Seite + Objektseite"]
+    SRV["CAP-Service (TypeScript)<br/>Statuslogik · Aktionen · Prüfungen"]
+    DB[("SAP HANA Cloud<br/>Verfolgung · Statusverlauf · Benachrichtigungen")]
+    XS["XSUAA<br/>Rollen Viewer · Dispatcher"]
+    DEST["Destination Service<br/>S/4-API-Key · iFlow-Zugangsdaten"]
+    IFLOW["Integration-Suite-iFlow<br/>Groovy-Mapping"]
   end
-  S4["S/4HANA Cloud APIs<br/>sales orders · outbound deliveries<br/>read only"]
+  S4["S/4HANA-Cloud-APIs<br/>Kundenaufträge · Auslieferungen<br/>nur lesend"]
 
   FE --> AR --> SRV
   AR -.-> XS
@@ -51,102 +50,111 @@ flowchart LR
   XS -.-> SRV
 ```
 
-The CAP service has one projection per concern:
+Der CAP-Service trennt die Zuständigkeiten Schicht für Schicht:
 
 ```text
 db/schema.cds (OrderTracking, StatusLog, Notification)
-  → srv/tracking-service.cds (draft-enabled service, actions, @restrict)
-  → srv/tracking-service.ts (handlers) + srv/lib/status.ts (pure status rules)
-  → app/trackingapp (Fiori Elements, annotations only)
+  → srv/tracking-service.cds (Draft-Service, Aktionen, @restrict)
+  → srv/tracking-service.ts (Handler) + srv/lib/status.ts (reine Statusregeln)
+  → app/trackingapp (Fiori Elements: Annotationen, dazu eine eigene Dashboard-Seite in ext/dashboard)
 ```
 
-## How the status is calculated
+## So wird der Status berechnet
 
-The rules live in one pure function, [`srv/lib/status.ts`](srv/lib/status.ts), and apply in this order:
+Die Regeln stehen in einer reinen Funktion, [`srv/lib/status.ts`](srv/lib/status.ts), und gelten in dieser Reihenfolge:
 
-1. Goods issue completed → **Geliefert**
-2. Delay reported manually → **Verzögert**
-3. Delivery created → **In Lieferung**
-4. Planned date has passed → **Verzögert**
-5. Otherwise → **Offen**
+1. Warenausgang abgeschlossen → **Geliefert**
+2. Verzögerung manuell gemeldet → **Verzögert**
+3. Lieferung angelegt → **In Lieferung**
+4. Plandatum überschritten → **Verzögert**
+5. Sonst → **Offen**
 
-## Technical highlights
+## Technische Highlights
 
-- **Clean core:** all data from S/4HANA comes through the released standard APIs (`API_SALES_ORDER_SRV`, `API_OUTBOUND_DELIVERY_SRV`). The extension owns only its own tables.
-- **Remote services in CAP:** the S/4 APIs are imported as external models and mocked from local CSV data in development and tests. On BTP the same code reads from destinations.
-- **Secrets in destinations, not in code:** the API key and the iFlow credentials live in BTP destinations. Locally they sit in a git-ignored private file.
-- **Authorization in two layers:** the whole service requires a login, and `@restrict` limits the tracking entity: *Viewer* can read, *Dispatcher* can also run actions. XSUAA enforces it on BTP, mocked users enforce it locally.
-- **Business rules in a plain function:** the status calculation has no CAP dependency and takes `today` as a parameter, so it is unit-tested without mocking the clock.
-- **Validation on save:** the sales order must exist in S/4HANA, a tracking can exist only once per order, and the planned date must not be in the past.
-- **Readable errors:** if S/4HANA is down, *Refresh Status* answers with a translated "not reachable" message instead of a stack trace. A failing notification is logged and shown as a warning, not lost.
-- **Translatable messages:** service messages are in English and German (`_i18n/`).
-- **Audit trail:** every status change writes a log entry with old status, new status and the reason.
+- **Clean Core:** Alle Daten aus S/4HANA kommen über freigegebene Standard-APIs (`API_SALES_ORDER_SRV`, `API_OUTBOUND_DELIVERY_SRV`). Die Erweiterung besitzt nur eigene Tabellen.
+- **Remote-Services in CAP:** Die S/4-APIs sind als externe Modelle importiert und werden in Entwicklung und Tests aus lokalen CSV-Daten simuliert. Auf der BTP liest derselbe Code über Destinations.
+- **Geheimnisse in Destinations, nicht im Code:** API-Key und iFlow-Zugangsdaten liegen in BTP-Destinations. Lokal stehen sie in einer von Git ignorierten privaten Datei.
+- **Autorisierung in zwei Schichten:** Der ganze Service verlangt einen Login, und `@restrict` schränkt die Verfolgungs-Entität ein: *Viewer* darf lesen, *Dispatcher* darf zusätzlich Aktionen ausführen. XSUAA setzt das auf der BTP durch, lokal übernehmen simulierte Benutzer das.
+- **Dashboard auf einer Seite:** Eine eigene Fiori-Elements-Seite vereint KPI-Kacheln, die Standard-Filterleiste und die Standardtabelle. Die Kacheln sind einfache UI5-Controls, gespeist aus einer OData-Abfrage; ein Klick setzt Bedingungen in der Filterleiste, sodass die Tabelle über den normalen Fiori-Mechanismus filtert. Die KPI-Werte folgen den Filtern für Kundenauftrag und Kunde.
+- **Berechtigungsbewusste Oberfläche:** Eine kleine Service-Funktion `userPermissions()` sagt der Oberfläche, ob der Benutzer Disponent ist. Leser sehen so keinen Anlegen-Button, der nur mit 403 scheitern würde. Der Service setzt die Regel weiterhin durch.
+- **Geschäftsregeln in einer einfachen Funktion:** Die Statusberechnung hat keine CAP-Abhängigkeit und nimmt `today` als Parameter. So lässt sie sich ohne Uhr-Mocking testen.
+- **Prüfung beim Sichern:** Der Kundenauftrag muss in S/4HANA existieren, pro Auftrag gibt es nur eine Verfolgung, und das Plandatum darf nicht in der Vergangenheit liegen.
+- **Verständliche Fehler:** Ist S/4HANA nicht erreichbar, antwortet *Status aktualisieren* mit einer übersetzten Meldung statt mit einem Stacktrace. Lehnt S/4HANA die Zugangsdaten ab (HTTP 401/403), sagt die Meldung das auch, damit ein falscher API-Key nicht wie ein Ausfall aussieht. Eine fehlgeschlagene Benachrichtigung wird protokolliert und als Warnung angezeigt, nicht verschluckt.
+- **Übersetzbare Meldungen und Oberfläche:** Service-Meldungen (`_i18n/`) und Dashboard-Texte (`app/trackingapp/webapp/i18n/`) gibt es auf Englisch und Deutsch.
+- **Nachvollziehbarkeit:** Jeder Statuswechsel schreibt einen Verlaufseintrag mit altem Status, neuem Status und Grund.
 
-## Quality
+## Qualität
 
-| Check | Scope | Result |
+| Prüfung | Umfang | Ergebnis |
 |---|---|---|
-| Jest unit tests | Status rules, one test per rule and priority | 5 green |
-| `cds.test` service tests | Whole app in memory over HTTP: list, delay action, validation, authorization (Viewer gets 403), refresh against the S/4 mocks, failed notification | 7 green |
-| TypeScript | `tsc --noEmit` on handlers and tests | No errors |
-| ESLint | CDS models with `@sap/eslint-plugin-cds` | No findings |
-| GitHub Actions | `npm ci` and `npm test` on every push and pull request | Badge above |
+| Jest-Unit-Tests | Statusregeln (ein Test pro Regel und Priorität) und die Zuordnung von S/4HANA-Fehlern zu Meldungen | 7 grün |
+| `cds.test`-Servicetests | Ganze App im Speicher über HTTP: Liste, Verzögerungsaktion, Prüfungen, Autorisierung (Viewer erhält 403), Benutzerberechtigungen, Aktualisierung gegen die S/4-Mocks, fehlgeschlagene Benachrichtigung | 8 grün |
+| TypeScript | `tsc --noEmit` für Handler und Tests | Keine Fehler |
+| ESLint | CDS-Modelle mit `@sap/eslint-plugin-cds` | Keine Befunde |
+| GitHub Actions | `npm ci` und `npm test` bei jedem Push und Pull Request | Badge oben |
 
-The service tests run against SQLite in memory with mocked S/4 APIs and no iFlow, so they work on any machine and in CI without credentials.
+Die Servicetests laufen gegen SQLite im Speicher mit simulierten S/4-APIs und ohne iFlow. Sie funktionieren daher auf jedem Rechner und in der CI ohne Zugangsdaten.
 
-## Repository structure
+## Projektstruktur
 
 ```text
-db/                    CDS data model and sample data
-srv/                   Service definition, handlers, external API models and mock data
-srv/lib/status.ts      Pure status calculation
-app/trackingapp/       Fiori Elements app (annotations, manifest)
-_i18n/                 Service messages, English and German
-test/                  Unit and service tests
-mta.yaml               Deployment to Cloud Foundry (app router, srv, HANA, XSUAA, destination)
-xs-security.json       Scopes, roles and role collections
-.deploy/app-router/    App router configuration
+db/                    CDS-Datenmodell und Beispieldaten
+srv/                   Service-Definition, Handler, externe API-Modelle und Mock-Daten
+srv/lib/status.ts      Reine Statusberechnung
+app/trackingapp/       Fiori-Elements-App (Annotationen, Manifest, eigene Dashboard-Seite in webapp/ext/dashboard)
+_i18n/                 Service-Meldungen, Englisch und Deutsch
+test/                  Unit- und Servicetests
+mta.yaml               Deployment nach Cloud Foundry (App router, srv, HANA, XSUAA, Destination)
+xs-security.json       Scopes, Rollen und Rollensammlungen
+.deploy/app-router/    App-router-Konfiguration
 ```
 
-## Run it locally
+## Lokal starten
 
 ```bash
 npm install
-cds watch        # mocked S/4 APIs, no keys needed
+cds watch        # simulierte S/4-APIs, keine Keys nötig
 ```
 
-Log in with `anna` / `123` (Dispatcher) or `ben` / `123` (Viewer). As `ben` the action buttons are rejected.
+Anmeldung mit `anna` / `123` (Dispatcher) oder `ben` / `123` (Viewer). Bei `ben` ist der Anlegen-Button ausgeblendet, und die Aktions-Buttons werden abgelehnt.
 
 ```bash
-npm test         # unit and service tests
+npm test         # Unit- und Servicetests
 ```
 
-## Deploy to SAP BTP
+## Auf SAP BTP deployen
 
-You need a BTP trial account with Cloud Foundry, an SAP HANA Cloud instance mapped to your space, and the two destinations `S4_SANDBOX` and `LIEFERSTATUS_IFLOW`.
+Voraussetzung sind ein BTP-Trial-Account mit Cloud Foundry, eine SAP-HANA-Cloud-Instanz, die deinem Space zugeordnet ist, und die beiden Destinations `S4_SANDBOX` und `LIEFERSTATUS_IFLOW`.
 
 ```bash
 mbt build
 cf deploy mta_archives/lieferstatus-hub_1.0.0.mtar
 ```
 
-Then assign the role collection `LieferStatus_Dispatcher` or `LieferStatus_Viewer` to your user and open the app router URL. The trial HANA instance stops every night; start it in HANA Cloud Central before a demo.
+Wichtige Destination-Einstellungen:
 
-## Limitations
+- **`S4_SANDBOX`:** URL `https://sandbox.api.sap.com`, dein API-Key steht in der zusätzlichen Eigenschaft `URL.headers.APIKey`. Ein fehlender oder falscher Key zeigt sich als „S/4HANA hat die Zugangsdaten abgelehnt“.
+- **`LIEFERSTATUS_IFLOW`:** Die URL muss die **Basis** der Integration-Suite-Runtime sein und auf `/http` enden (zum Beispiel `https://<tenant>.it-cpitrial06-rt.cfapps.us10-001.hana.ondemand.com/http`), dazu die iFlow-Zugangsdaten. Die App hängt `/lieferstatus/notify` selbst an, daher gehört dieser Pfad nicht in die Destination.
 
-- "Delivered" is based on goods issue. Real proof of delivery is not modelled.
-- The sandbox APIs are read only, so status changes live in the app's own tables, not in S/4HANA.
-- ESLint covers the CDS models but not the TypeScript files, because the TypeScript 7 toolchain is not yet supported by `typescript-eslint`. `tsc` checks the types.
-- The tests run on SQLite. SQL that only HANA rejects can pass them (see below).
+Danach die Rollensammlung `LieferStatus_Dispatcher` oder `LieferStatus_Viewer` dem eigenen Benutzer zuweisen und die App-router-URL öffnen. Die Trial-HANA-Instanz stoppt jede Nacht; vor einer Demo in HANA Cloud Central starten.
 
-## What I learned
+## Einschränkungen
 
-The test setup passed while the app failed on HANA: a `case status when 'X'` expression that SQLite accepts is rejected by HANA Cloud, and only the deployed app showed it. Since then I treat a green test run as necessary but not sufficient, and I check the deployed app too. I also learned to read the Cloud Foundry logs first: the crashes on BTP came from build output and missing start scripts, not from the code.
+- „Geliefert“ basiert auf dem Warenausgang. Ein echter Liefernachweis ist nicht abgebildet.
+- Das Dashboard liest bis zu 1.000 Aufträge und berechnet die KPIs im Browser. Bei deutlich größeren Datenmengen sollte das auf serverseitige Aggregation (`$apply`) umgestellt werden.
+- Die KPI-Kacheln folgen den Filtern für Kundenauftrag und Kunde, nicht der Freitextsuche und nicht einem von Hand gesetzten Status- oder Datumsfilter.
+- Die Sandbox-APIs sind schreibgeschützt, daher liegen Statusänderungen in den eigenen Tabellen der App und nicht in S/4HANA.
+- ESLint prüft die CDS-Modelle, aber nicht die TypeScript-Dateien, weil die TypeScript-7-Toolchain von `typescript-eslint` noch nicht unterstützt wird. Die Typen prüft `tsc`.
+- Die Tests laufen auf SQLite. SQL, das nur HANA ablehnt, kann sie bestehen (siehe unten).
 
-## Built with
+## Was ich gelernt habe
 
-SAP BTP (trial) · SAP CAP (Node.js, TypeScript) · CDS · OData V2 and V4 · Fiori Elements · SAP HANA Cloud · XSUAA · Destination service · SAP Integration Suite (Cloud Integration, Groovy) · Jest · `@cap-js/cds-test` · GitHub Actions · MTA
+Die Tests liefen durch, während die App auf HANA scheiterte: Ein `case status when 'X'`-Ausdruck, den SQLite akzeptiert, lehnt HANA Cloud ab, und nur die deployte App hat es gezeigt. Seitdem gilt für mich ein grüner Testlauf als notwendig, aber nicht ausreichend, und ich prüfe zusätzlich die deployte App. Zwei weitere Fälle derselben Art: Eine Destination-URL, die den iFlow-Pfad schon enthielt, ließ die App `…/notify/lieferstatus/notify` aufrufen, was sich nur in der deployten App als 404 zeigte. Und ein CSV-Wert mit Komma wurde lokal stillschweigend abgeschnitten, von HANA aber abgelehnt. Außerdem habe ich gelernt, zuerst die Cloud-Foundry-Logs zu lesen: Die Abstürze auf der BTP kamen von Build-Ausgaben und fehlenden Start-Skripten, nicht vom Code.
 
-## Author
+## Eingesetzte Technologien
+
+SAP BTP (Trial) · SAP CAP (Node.js, TypeScript) · CDS · OData V2 und V4 · Fiori Elements · SAP HANA Cloud · XSUAA · Destination Service · SAP Integration Suite (Cloud Integration, Groovy) · Jest · `@cap-js/cds-test` · GitHub Actions · MTA
+
+## Autor
 
 Issa Hirwa Nizeyimana · [LinkedIn](https://www.linkedin.com/in/issa-hirwa-nizeyimana-245a393bb)
