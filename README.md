@@ -34,15 +34,15 @@ Screenshots unten
 ```mermaid
 flowchart LR
   subgraph BTP["SAP BTP, Cloud Foundry"]
-    AR["App router<br/>Login + liefert die Fiori-App aus"]
-    FE["Fiori-Elements-App<br/>Dashboard-Seite + Objektseite"]
-    SRV["CAP-Service (TypeScript)<br/>Statuslogik · Aktionen · Prüfungen"]
-    DB[("SAP HANA Cloud<br/>Verfolgung · Statusverlauf · Benachrichtigungen")]
-    XS["XSUAA<br/>Rollen Viewer · Dispatcher"]
-    DEST["Destination Service<br/>S/4-API-Key · iFlow-Zugangsdaten"]
-    IFLOW["Integration-Suite-iFlow<br/>Groovy-Mapping"]
+    FE["Fiori Elements<br/>Dashboard +<br/>Objektseite"]
+    AR["App router<br/>Login, liefert<br/>die App aus"]
+    SRV["CAP-Service<br/>(TypeScript)<br/>Statuslogik,<br/>Aktionen,<br/>Prüfungen"]
+    DB[("SAP HANA Cloud<br/>Verfolgung,<br/>Statusverlauf,<br/>Benachrichtigung")]
+    XS["XSUAA<br/>Rollen Viewer<br/>und Dispatcher"]
+    DEST["Destination<br/>Service<br/>S/4-API-Key,<br/>iFlow-Zugang"]
+    IFLOW["Integration<br/>Suite iFlow<br/>Groovy-Mapping"]
   end
-  S4["S/4HANA-Cloud-APIs<br/>Kundenaufträge · Auslieferungen<br/>nur lesend"]
+  S4["S/4HANA-Cloud-APIs<br/>Kundenaufträge,<br/>Auslieferungen<br/>(nur lesend)"]
 
   FE --> AR --> SRV
   AR -.-> XS
