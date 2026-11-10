@@ -1,12 +1,14 @@
 # LieferStatus-Hub
 
-[🇩🇪 Deutsch](README.md) · 🇬🇧 English
+*Deutsche Version: [🇩🇪 README.md](README.md)*
 
 [![tests](https://github.com/nizeyimanaissa-hub/lieferstatus-hub/actions/workflows/test.yml/badge.svg)](https://github.com/nizeyimanaissa-hub/lieferstatus-hub/actions/workflows/test.yml)
 
 A clean-core side-by-side extension on **SAP BTP**: order and delivery status from S/4HANA in one Fiori app, with customer notifications through **SAP Integration Suite**. Built as a portfolio project with **SAP CAP (Node.js, TypeScript), Fiori Elements, HANA Cloud and XSUAA**. S/4HANA itself stays untouched.
 
 ## Demo
+
+Screenshots below
 
 | Dashboard with KPI tiles, "needs attention" popover and order table |
 |---|
