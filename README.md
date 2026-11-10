@@ -32,7 +32,7 @@ Screenshots unten
 ## Architektur
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph BTP["SAP BTP, Cloud Foundry"]
     FE["Fiori Elements<br/>Dashboard +<br/>Objektseite"]
     AR["App router<br/>Login, liefert<br/>die App aus"]
