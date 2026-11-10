@@ -1,2 +1,31 @@
 ID,tracking_ID,oldStatus,newStatus,comment
 d3b0a1e2-1001-4000-8000-000000001001,d3b0a1e2-0003-4000-8000-000000000003,Offen,Verzoegert,Lieferverzug gemeldet
+d3b0a1e2-1002-4000-8000-000000001002,d3b0a1e2-0002-4000-8000-000000000002,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1003-4000-8000-000000001003,d3b0a1e2-0004-4000-8000-000000000004,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1004-4000-8000-000000001004,d3b0a1e2-0004-4000-8000-000000000004,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1005-4000-8000-000000001005,d3b0a1e2-0006-4000-8000-000000000006,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1006-4000-8000-000000001006,d3b0a1e2-0007-4000-8000-000000000007,Offen,Verzoegert,Lieferverzug gemeldet: Lieferengpass beim Hersteller
+d3b0a1e2-1007-4000-8000-000000001007,d3b0a1e2-0009-4000-8000-000000000009,Offen,Verzoegert,Lieferverzug gemeldet: Kapazitätsengpass im Lager
+d3b0a1e2-1008-4000-8000-000000001008,d3b0a1e2-0010-4000-8000-000000000010,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1009-4000-8000-000000001009,d3b0a1e2-0012-4000-8000-000000000012,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1010-4000-8000-000000001010,d3b0a1e2-0014-4000-8000-000000000014,Offen,Verzoegert,Lieferverzug gemeldet: Falsche Adresse - Klärung mit Kunden
+d3b0a1e2-1011-4000-8000-000000001011,d3b0a1e2-0015-4000-8000-000000000015,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1012-4000-8000-000000001012,d3b0a1e2-0015-4000-8000-000000000015,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1013-4000-8000-000000001013,d3b0a1e2-0016-4000-8000-000000000016,Offen,Verzoegert,Lieferverzug gemeldet: Wetterbedingte Verzögerung im Transport
+d3b0a1e2-1014-4000-8000-000000001014,d3b0a1e2-0017-4000-8000-000000000017,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1015-4000-8000-000000001015,d3b0a1e2-0018-4000-8000-000000000018,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1016-4000-8000-000000001016,d3b0a1e2-0018-4000-8000-000000000018,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1017-4000-8000-000000001017,d3b0a1e2-0019-4000-8000-000000000019,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1018-4000-8000-000000001018,d3b0a1e2-0019-4000-8000-000000000019,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1019-4000-8000-000000001019,d3b0a1e2-0020-4000-8000-000000000020,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1020-4000-8000-000000001020,d3b0a1e2-0020-4000-8000-000000000020,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1021-4000-8000-000000001021,d3b0a1e2-0022-4000-8000-000000000022,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1022-4000-8000-000000001022,d3b0a1e2-0023-4000-8000-000000000023,Offen,Verzoegert,Lieferverzug gemeldet: Zollabfertigung verzögert
+d3b0a1e2-1023-4000-8000-000000001023,d3b0a1e2-0024-4000-8000-000000000024,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1024-4000-8000-000000001024,d3b0a1e2-0024-4000-8000-000000000024,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1025-4000-8000-000000001025,d3b0a1e2-0025-4000-8000-000000000025,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1026-4000-8000-000000001026,d3b0a1e2-0027-4000-8000-000000000027,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1027-4000-8000-000000001027,d3b0a1e2-0030-4000-8000-000000000030,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1028-4000-8000-000000001028,d3b0a1e2-0030-4000-8000-000000000030,InLieferung,Geliefert,Zustellung beim Kunden bestätigt
+d3b0a1e2-1029-4000-8000-000000001029,d3b0a1e2-0031-4000-8000-000000000031,Offen,InLieferung,Ware an Spediteur übergeben
+d3b0a1e2-1030-4000-8000-000000001030,d3b0a1e2-0033-4000-8000-000000000033,Offen,InLieferung,Ware an Spediteur übergeben

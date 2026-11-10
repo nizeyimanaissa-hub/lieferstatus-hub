@@ -1,0 +1,28 @@
+.lsKpiRow { padding: 1rem 1rem 1.5rem 1rem; gap: 1rem; }
+.lsTile { margin: 0; }
+.lsGrid { padding: 1rem; gap: 1rem; }
+.lsCard {
+  flex: 1 1 22rem;
+  min-width: 20rem;
+  padding: 1rem 1.25rem;
+  background: var(--sapTile_Background, #fff);
+  border-radius: 1rem;
+  box-shadow: var(--sapContent_Shadow0, 0 0 0 1px rgba(0,0,0,.1));
+}
+.lsCardWide { flex: 2 1 32rem; }
+.lsBars { margin-top: .75rem; }
+.lsBarRow { margin-bottom: .6rem; }
+.lsBar { flex: 1; }
+.lsFilter { padding: .5rem 1rem 0 1rem; }
+.lsTableCard {
+  margin: 0 1rem 1rem 1rem;
+  padding: .5rem;
+  background: var(--sapTile_Background, #fff);
+  border-radius: 1rem;
+  box-shadow: var(--sapContent_Shadow0, 0 0 0 1px rgba(0,0,0,.1));
+}
+.lsTile { cursor: pointer; }
+.lsTileActive { outline: 2px solid var(--sapSelectedColor, #0a6ed1); outline-offset: 2px; border-radius: 1rem; }
+.lsCardCompact { flex: 0 1 28rem; padding: .5rem 1rem; }
+.lsCardCompact .sapMLIB { min-height: 0; }
+.lsGrid:has(.lsCardCompact) { padding-top: .5rem; padding-bottom: .5rem; }

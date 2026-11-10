@@ -1,5 +1,6 @@
 import cds from '@sap/cds'
 import { calculateStatus, Status } from './lib/status'
+import { s4ErrorMessage } from './lib/errors'
 
 const { SELECT, INSERT, UPDATE } = cds.ql
 const LOG = cds.log('tracking')
@@ -16,6 +17,9 @@ export default class TrackingService extends cds.ApplicationService {
     // Reads on S/4HANA entities are delegated to the APIs
     this.on('READ', SalesOrders, req => salesOrderApi.run(req.query))
     this.on('READ', [Deliveries, DeliveryItems], req => deliveryApi.run(req.query))
+
+    // Tells the UI what the current user may do (e.g. hide the Create button for Viewers)
+    this.on('userPermissions', req => ({ canCreate: req.user.is('Dispatcher') }))
 
     // Writes a new status and a log entry, but only if something changed
     const changeStatus = async (tracking: any, newStatus: Status, comment: string) => {
@@ -63,7 +67,7 @@ export default class TrackingService extends cds.ApplicationService {
         }
       } catch (err: any) {
         LOG.error('S/4HANA call failed', err.message)
-        return req.reject({ status: 502, message: 'S4_UNAVAILABLE' })
+        return req.reject({ status: 502, message: s4ErrorMessage(err) })
       }
       // Outside the try: req.reject throws and must not be caught above
       if (!order) return req.reject({ status: 404, message: 'ORDER_NOT_FOUND', args: [tracking.salesOrder] })

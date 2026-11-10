@@ -49,7 +49,9 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.fe.core": {},
+        "sap.fe.macros": {}
       }
     },
     "contentDensities": {
@@ -78,7 +80,11 @@
       }
     },
     "resources": {
-      "css": []
+      "css": [
+        {
+          "uri": "css/dashboard.css"
+        }
+      ]
     },
     "routing": {
       "config": {},
@@ -98,22 +104,15 @@
         "OrderTrackingList": {
           "type": "Component",
           "id": "OrderTrackingList",
-          "name": "sap.fe.templates.ListReport",
+          "name": "sap.fe.core.fpm",
           "options": {
             "settings": {
+              "viewName": "trackingapp.ext.dashboard.Dashboard",
               "contextPath": "/OrderTracking",
-              "variantManagement": "Page",
               "navigation": {
                 "OrderTracking": {
                   "detail": {
                     "route": "OrderTrackingObjectPage"
-                  }
-                }
-              },
-              "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem": {
-                  "tableSettings": {
-                    "type": "ResponsiveTable"
                   }
                 }
               }

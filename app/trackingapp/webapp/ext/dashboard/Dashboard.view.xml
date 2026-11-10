@@ -1,0 +1,74 @@
+<mvc:View
+    controllerName="trackingapp.ext.dashboard.Dashboard"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:macros="sap.fe.macros"
+    xmlns:macroTable="sap.fe.macros.table"
+    height="100%">
+  <Page title="{i18n>dashTitle}" showHeader="false" class="lsDash">
+    <content>
+      <!-- Filter bar (same fields as before) -->
+      <VBox class="lsFilter">
+        <macros:FilterBar id="FilterBar" contextPath="/OrderTracking" search=".onFilterSearch"
+            metaPath="@com.sap.vocabularies.UI.v1.SelectionFields"/>
+      </VBox>
+
+      <!-- KPI tiles -->
+      <FlexBox wrap="Wrap" class="lsKpiRow">
+        <GenericTile header="{i18n>kpiTotal}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="all"/></customData>
+          <TileContent><NumericContent value="{dash>/total}" icon="sap-icon://sales-order" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>kpiOnTime}" subheader="{i18n>kpiOnTimeSub}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="delivered"/></customData>
+          <TileContent><NumericContent value="{dash>/deliveredPct}" scale="%" valueColor="Good" icon="sap-icon://accept" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>kpiTransit}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="transit"/></customData>
+          <TileContent><NumericContent value="{dash>/transit}" valueColor="Critical" icon="sap-icon://shipping-status" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>kpiDelayed}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="delayed"/></customData>
+          <TileContent><NumericContent value="{dash>/delayed}" valueColor="Error" icon="sap-icon://alert" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>kpiOverdue}" subheader="{i18n>kpiOverdueSub}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="overdue"/></customData>
+          <TileContent><NumericContent value="{dash>/overdue}" valueColor="{dash>/overdueColor}" icon="sap-icon://past" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>kpiDue7}" class="lsTile" frameType="OneByOne" press=".onKpi">
+          <customData><core:CustomData key="kpi" value="due7"/></customData>
+          <TileContent><NumericContent value="{dash>/due7}" valueColor="Neutral" icon="sap-icon://date-time" withMargin="false"/></TileContent>
+        </GenericTile>
+        <GenericTile header="{i18n>secAttention}" subheader="{i18n>attentionSub}" class="lsTile" frameType="OneByOne" press=".onAttention">
+          <TileContent><NumericContent value="{= ${dash>/attention}.length}" valueColor="{= ${dash>/attention}.length > 0 ? 'Error' : 'Good'}" icon="sap-icon://warning2" withMargin="false"/></TileContent>
+        </GenericTile>
+        <dependents>
+          <ResponsivePopover id="attentionPopover" title="{i18n>secAttention}" placement="Bottom" contentWidth="26rem">
+            <List items="{dash>/attention}" noDataText="{i18n>noDelays}" showSeparators="Inner">
+              <ObjectListItem title="{dash>title}" number="{dash>date}" type="Navigation" press=".onOpenOrder">
+                <firstStatus><ObjectStatus text="{dash>statusText}" state="{dash>state}" inverted="true"/></firstStatus>
+                <attributes><ObjectAttribute text="{dash>subtitle}"/></attributes>
+              </ObjectListItem>
+            </List>
+          </ResponsivePopover>
+        </dependents>
+      </FlexBox>
+
+      <!-- The orders table, below the dashboard -->
+      <VBox class="lsTableCard">
+        <macros:Table id="OrdersTable" contextPath="/OrderTracking"
+            metaPath="@com.sap.vocabularies.UI.v1.LineItem"
+            filterBar="FilterBar"
+            header="{i18n>tableHeader}"
+            type="ResponsiveTable"
+            rowPress=".onRowPress"
+            personalization="Sort,Column,Filter">
+          <macros:actions>
+            <macroTable:Action key="createOrder" text="{i18n>createOrder}" type="Emphasized" visible="{dash>/canCreate}" press=".onCreate" requiresSelection="false"/>
+          </macros:actions>
+        </macros:Table>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

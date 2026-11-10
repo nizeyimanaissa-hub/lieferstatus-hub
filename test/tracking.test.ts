@@ -54,4 +54,11 @@ describe('TrackingService', () => {
     const { data } = await GET(`${key(T3)}?$expand=notifications`, asAnna)
     expect(data.notifications.some((n: any) => n.sentOk === false)).toBe(true)
   })
+
+  test('userPermissions tells a Dispatcher they may create, a Viewer not', async () => {
+    const anna = await GET('/tracking/userPermissions()', asAnna)
+    const ben = await GET('/tracking/userPermissions()', asBen)
+    expect(anna.data.canCreate).toBe(true)
+    expect(ben.data.canCreate).toBe(false)
+  })
 })

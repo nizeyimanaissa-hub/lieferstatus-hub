@@ -8,6 +8,7 @@ service TrackingService @(path: '/tracking') {
     action markDelayed(reason : String(255)) returns OrderTracking;
     action notifyCustomer()                returns OrderTracking;
   };
+  function userPermissions() returns { canCreate : Boolean };
   @readonly entity StatusLog as projection on db.StatusLog;
   @readonly entity Notifications as projection on db.Notification;
 
